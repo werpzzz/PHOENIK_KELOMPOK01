@@ -1,0 +1,153 @@
+# SISTEM PERPUSTAKAAN KAMPUS
+# WATERMARK: KELOMPOK 1 - MODUL 4
+
+# DATA BUKU
+daftar_buku = [
+    {"judul": "Pemrograman Python", "kategori": "Pemrograman", "status": "Tersedia"},
+    {"judul": "Dasar Teknik Komputer", "kategori": "Teknik Komputer", "status": "Tersedia"},
+    {"judul": "Algoritma dan Pemrograman", "kategori": "Pemrograman", "status": "Dipinjam"},
+    {"judul": "Sistem Digital", "kategori": "Elektronika", "status": "Tersedia"},
+    {"judul": "Jaringan Komputer", "kategori": "Jaringan", "status": "Tersedia"}
+]
+# FUNCTION RETURN TANPA PARAMETER
+def nama_perpustakaan():
+    return "PERPUSTAKAAN TEKNIK KOMPUTER"
+
+# FUNCTION RETURN DENGAN PARAMETER
+def cari_buku(judul):
+    for buku in daftar_buku:
+        if buku["judul"].lower() == judul.lower():
+            return buku
+
+    return None
+
+# FUNCTION NON-RETURN DENGAN PARAMETER
+def tampilkan_buku(kategori):
+    print(f"\nDAFTAR BUKU KATEGORI {kategori.upper()}")
+    ditemukan = False
+    for buku in daftar_buku:
+        if buku["kategori"].lower() == kategori.lower():
+            print(f"- {buku['judul']} | Status: {buku['status']}")
+            ditemukan = True
+
+    if not ditemukan:
+        print("Tidak ada buku dalam kategori tersebut.")
+
+# CLASS MAHASISWA
+class Mahasiswa:
+
+    # METHOD NON-RETURN DENGAN PARAMETER
+    def __init__(self, nama, nim, prodi):
+        self.nama = nama
+        self.nim = nim
+        self.prodi = prodi
+        self.buku_dipinjam = None
+
+    # METHOD NON-RETURN TANPA PARAMETER
+    def profil(self):
+        print("\n===== PROFIL MAHASISWA =====")
+        print(f"Nama : {self.nama}")
+        print(f"NIM  : {self.nim}")
+        print(f"Prodi: {self.prodi}")
+
+        if self.buku_dipinjam:
+            print(f"Buku yang dipinjam: {self.buku_dipinjam['judul']}")
+        else:
+            print("Buku yang dipinjam: Tidak ada")
+
+    # METHOD RETURN DENGAN PARAMETER
+    def cek_keterlambatan(self, hari):
+        if hari > 7:
+            return "Terlambat mengembalikan buku."
+        else:
+            return "Pengembalian masih tepat waktu."
+
+    # METHOD NON-RETURN DENGAN PARAMETER
+    def pinjam_buku(self, judul):
+        buku = cari_buku(judul)
+
+        if buku is None:
+            print("Buku tidak ditemukan.")
+
+        elif buku["status"] == "Dipinjam":
+            print("Buku tersebut sedang dipinjam.")
+
+        else:
+            buku["status"] = "Dipinjam"
+            self.buku_dipinjam = buku
+            print(f"Buku '{buku['judul']}' berhasil dipinjam.")
+
+    # METHOD NON-RETURN TANPA PARAMETER
+    def kembalikan_buku(self):
+        if self.buku_dipinjam is None:
+            print("Tidak ada buku yang sedang dipinjam.")
+        else:
+            judul = self.buku_dipinjam["judul"]
+            self.buku_dipinjam["status"] = "Tersedia"
+            self.buku_dipinjam = None
+            print(f"Buku '{judul}' berhasil dikembalikan.")
+
+# PROGRAM UTAMA
+print("=" * 50)
+print(nama_perpustakaan())
+print("=" * 50)
+
+# Membuat objek mahasiswa
+mahasiswa = Mahasiswa(
+    "Dafa Briangga",
+    "240101",
+    "Teknik Komputer"
+)
+
+# Menampilkan profil mahasiswa
+mahasiswa.profil()
+
+# Menampilkan seluruh buku
+print("\n===== SEMUA DAFTAR BUKU =====")
+
+for buku in daftar_buku:
+    print(
+        f"- {buku['judul']} | "
+        f"{buku['kategori']} | "
+        f"{buku['status']}"
+    )
+    
+# PENCARIAN BUKU
+print("\n===== PENCARIAN BUKU =====")
+
+judul_dicari = "Sistem Digital"
+
+hasil = cari_buku(judul_dicari)
+
+if hasil:
+    print(f"Buku ditemukan: {hasil['judul']}")
+    print(f"Kategori: {hasil['kategori']}")
+    print(f"Status: {hasil['status']}")
+else:
+    print("Buku tidak ditemukan.")
+
+# PEMINJAMAN BUKU
+print("\n===== PEMINJAMAN BUKU =====")
+
+mahasiswa.pinjam_buku("Sistem Digital")
+
+# Menampilkan profil setelah peminjaman
+mahasiswa.profil()
+
+# CEK KETERLAMBATAN
+print("\n===== STATUS PEMINJAMAN =====")
+hari_peminjaman = 5
+status = mahasiswa.cek_keterlambatan(hari_peminjaman)
+print(f"Lama peminjaman: {hari_peminjaman} hari")
+print(f"Status: {status}")
+
+# MENAMPILKAN BUKU BERDASARKAN KATEGORI
+tampilkan_buku("Pemrograman")
+
+# PENGEMBALIAN BUKU
+print("\n===== PENGEMBALIAN BUKU =====")3
+mahasiswa.kembalikan_buku()
+
+# Menampilkan profil setelah pengembalian
+mahasiswa.profil()
+print("\n===== PROGRAM SELESAI =====")
